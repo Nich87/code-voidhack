@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Hack Editor</title>
+</svelte:head>
+
 <script lang="ts">
 	import { onMount } from 'svelte/internal';
 	import CodeMirror from 'svelte-codemirror-editor';
@@ -31,10 +35,6 @@
 		window.addEventListener('keydown', handleKeyDown);
 	});
 </script>
-
-<svelte:head>
-	<title>Hack Editor</title>
-</svelte:head>
 
 
 <main>
