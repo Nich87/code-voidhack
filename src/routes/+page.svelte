@@ -28,6 +28,10 @@
 		PageTabs = PageTabs;
 	}
 
+	function handleValueChange(index: number, event: any) {
+		PageTabs[index].setContent(event.detail);
+	}
+
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.ctrlKey && event.code === 'KeyQ') {
 			const activeIndex = Page.getActiveIndex();
@@ -53,13 +57,14 @@
 		<Tab
 			label={PageTab.getName()}
 			selected={index === Page.getActiveIndex()}
-			on:click={() => console.log(`Clicked:${index}`)}
+			on:click={() => Page.setActiveIndex(index)}
 		/>
 	{/each}
 	<svelte:fragment slot="content">
-		{#each PageTabs as PageTab}
+		{#each PageTabs as PageTab, index}
 			<TabContent>
 				<CodeMirror
+					on:change={(e) => handleValueChange(index, e)}
 					value={PageTab.getContent()}
 					lang={langs[Number(selected)]}
 					theme={oneDark}
@@ -86,7 +91,6 @@
 
 <!-- @Todo
 		#Footerに実装するもの
-		- 言語セレクタ
 		- テーマ切り替えトグルスイッチ
 		- フォーマットボタン
 	 -->

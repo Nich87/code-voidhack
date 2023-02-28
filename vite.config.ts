@@ -7,6 +7,6 @@ export default defineConfig({
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
 	optimizeDeps: {
-        exclude: ["codemirror", "@codemirror/language-javascript"/* ... */],
+        exclude: ["codemirror", "@codemirror/language-javascript", "@codemirror/lang-html", "@codemirror/lang-css"],
 	}
 });
