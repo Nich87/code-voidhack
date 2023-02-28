@@ -33,6 +33,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@codemirror/lang-css": "^6.0.2",
+		"@codemirror/lang-html": "^6.4.2",
 		"@codemirror/lang-javascript": "^6.1.4",
 		"@codemirror/theme-one-dark": "^6.1.1",
 		"carbon-components-svelte": "^0.73.1",
