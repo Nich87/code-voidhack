@@ -1,27 +1,34 @@
-<svelte:head>
-	<title>Hack Editor</title>
-</svelte:head>
-
 <script lang="ts">
 	import { onMount } from 'svelte/internal';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { javascript } from '@codemirror/lang-javascript';
+	import { html } from '@codemirror/lang-html';
+	import { css } from '@codemirror/lang-css';
 	import { oneDark } from '@codemirror/theme-one-dark';
 	import { ArcheTypes, ArchetypePageTab } from './lib/components/archtypes';
 	import { Tabs, Tab, TabContent } from 'carbon-components-svelte';
+	import { Dropdown } from 'carbon-components-svelte';
 	import 'carbon-components-svelte/css/g100.css';
 
 	let Page: ArcheTypes = new ArcheTypes();
 	let PageTabs: ArchetypePageTab[] = Page.getTabs();
+	PageTabs.push(new ArchetypePageTab('Code', '', 0));
+
+	const langs = [javascript(), html(), css()];
+	let selected: string = '0';
 
 	function addNewTab() {
-		const newTab = new ArchetypePageTab(`Tab:${Page.getLastIndex() + 1}`, `NowIndex:${Page.getActiveIndex()}`, Page.getLastIndex() + 1);
+		const newTab = new ArchetypePageTab(
+			`Tab:${Page.getLastIndex() + 1}`,
+			`NowIndex:${Page.getActiveIndex()}`,
+			Page.getLastIndex() + 1
+		);
 		Page.addTab(newTab);
-		Page.setActiveIndex(Page.getLastIndex()+1);
+		Page.setActiveIndex(Page.getLastIndex() + 1);
 		PageTabs = PageTabs;
 	}
 
-	function handleValueChange(index:number,event:any){
+	function handleValueChange(index: number, event: any) {
 		PageTabs[index].setContent(event.detail);
 	}
 
@@ -40,6 +47,9 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Hack Editor</title>
+</svelte:head>
 
 <Tabs autoWidth>
 	{#each PageTabs as PageTab, index}
@@ -47,13 +57,14 @@
 		<Tab
 			label={PageTab.getName()}
 			selected={index === Page.getActiveIndex()}
-			on:click={() => console.log(`Clicked:${index}`)}
+			on:click={() => Page.setActiveIndex(index)}
 		/>
 	{/each}
 	<svelte:fragment slot="content">
-		{#each PageTabs as PageTab}
+		{#each PageTabs as PageTab, index}
 			<TabContent>
 				<CodeMirror
+					on:change={(e) => handleValueChange(index, e)}
 					value={PageTab.getContent()}
 					lang={langs[Number(selected)]}
 					theme={oneDark}
@@ -78,9 +89,8 @@
 	/>
 </footer>
 
-	<!-- @Todo
+<!-- @Todo
 		#Footerに実装するもの
 		- テーマ切り替えトグルスイッチ
 		- フォーマットボタン
 	 -->
-</main>
