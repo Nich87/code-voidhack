@@ -21,6 +21,10 @@
 		PageTabs = PageTabs;
 	}
 
+	function handleValueChange(index:number,event:any){
+		PageTabs[index].setContent(event.detail);
+	}
+
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.ctrlKey && event.code === 'KeyQ') {
 			const activeIndex = Page.getActiveIndex();
@@ -37,25 +41,45 @@
 </script>
 
 
-<main>
-	<Tabs autoWidth>
-		{#each PageTabs as PageTab, index}
-			<!-- Selectedではなくclass書き換えが必要？ -->
-			<Tab label={PageTab.getName()} selected={index === Page.getActiveIndex()} on:click={() => console.log(`Clicked:${index}`)} />
+<Tabs autoWidth>
+	{#each PageTabs as PageTab, index}
+		<!-- Selectedではなくclass書き換えが必要？ -->
+		<Tab
+			label={PageTab.getName()}
+			selected={index === Page.getActiveIndex()}
+			on:click={() => console.log(`Clicked:${index}`)}
+		/>
+	{/each}
+	<svelte:fragment slot="content">
+		{#each PageTabs as PageTab}
+			<TabContent>
+				<CodeMirror
+					value={PageTab.getContent()}
+					lang={langs[Number(selected)]}
+					theme={oneDark}
+					styles={{ '&': { height: '80vh' } }}
+				/>
+			</TabContent>
 		{/each}
-		<svelte:fragment slot="content">
-			{#each PageTabs as PageTab}
-				<TabContent>
-					<CodeMirror value={PageTab.getContent()} lang={javascript()} theme={oneDark} styles={{ '&': { height: '90vh' } }} />
-				</TabContent>
-			{/each}
-		</svelte:fragment>
-		<button on:click={addNewTab}>+</button>
-	</Tabs>
+	</svelte:fragment>
+	<button on:click={addNewTab}>+</button>
+</Tabs>
+
+<footer style="margin-top:auto;">
+	<Dropdown
+		direction="top"
+		titleText="Language"
+		bind:selectedId={selected}
+		items={[
+			{ id: '0', text: 'JavaScript' },
+			{ id: '1', text: 'HTML' },
+			{ id: '2', text: 'CSS' }
+		]}
+	/>
+</footer>
 
 	<!-- @Todo
 		#Footerに実装するもの
-		- 言語セレクタ
 		- テーマ切り替えトグルスイッチ
 		- フォーマットボタン
 	 -->
